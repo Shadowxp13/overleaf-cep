@@ -115,9 +115,9 @@ export default async function (webRouter, privateApiRouter, publicApiRouter) {
 
   webRouter.use(function (req, res, next) {
     req.externalAuthenticationSystemUsed =
-      Features.externalAuthenticationSystemUsed
+      () => !!req?.user?.externalAuth
     res.locals.externalAuthenticationSystemUsed =
-      Features.externalAuthenticationSystemUsed
+      () => !!req?.user?.externalAuth
     req.hasFeature = res.locals.hasFeature = Features.hasFeature
     next()
   })
@@ -407,7 +407,7 @@ export default async function (webRouter, privateApiRouter, publicApiRouter) {
       labsEnabled: Settings.labs && Settings.labs.enable,
       wikiEnabled: Settings.overleaf != null || Settings.proxyLearn,
       templatesEnabled:
-        Settings.overleaf != null || Settings.templates?.user_id != null,
+        Settings.overleaf != null || Boolean(Settings.templates),
       cioWriteKey: Settings.analytics?.cio?.writeKey,
       cioSiteId: Settings.analytics?.cio?.siteId,
     }

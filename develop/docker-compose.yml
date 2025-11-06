@@ -122,13 +122,20 @@ services:
       dockerfile: services/real-time/Dockerfile
     env_file:
       - dev.env
-
+ 
   redis:
     image: redis:5
     ports:
       - "127.0.0.1:6379:6379" # for debugging
     volumes:
       - redis-data:/data
+
+  references:
+    build:
+      context: ..
+      dockerfile: services/references/Dockerfile
+    env_file:
+      - dev.env
 
   web:
     build:
@@ -139,7 +146,7 @@ services:
       - dev.env
     environment:
       - APP_NAME=Overleaf Community Edition
-      - ENABLED_LINKED_FILE_TYPES=project_file,project_output_file
+      - ENABLED_LINKED_FILE_TYPES=project_file,project_output_file,url
       - EMAIL_CONFIRMATION_DISABLED=true
       - NODE_ENV=development
       - OVERLEAF_ALLOW_PUBLIC_ACCESS=true
@@ -160,6 +167,7 @@ services:
       - notifications
       - project-history
       - real-time
+      - references
 
   webpack:
     build:

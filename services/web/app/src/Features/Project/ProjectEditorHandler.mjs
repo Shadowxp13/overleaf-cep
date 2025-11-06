@@ -2,8 +2,8 @@ import _ from 'lodash'
 import Path from 'node:path'
 let ProjectEditorHandler
 
-export default ProjectEditorHandler = {
-  trackChangesAvailable: false,
+module.exports = ProjectEditorHandler = {
+  trackChangesAvailable: true,
 
   buildProjectModelView(
     project,
@@ -26,7 +26,7 @@ export default ProjectEditorHandler = {
       deletedByExternalDataSource: project.deletedByExternalDataSource || false,
       imageName:
         project.imageName != null
-          ? Path.basename(project.imageName)
+          ? project.imageName
           : undefined,
     }
 

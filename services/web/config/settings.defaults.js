@@ -264,6 +264,9 @@ module.exports = {
     notifications: {
       url: `http://${process.env.NOTIFICATIONS_HOST || '127.0.0.1'}:3042`,
     },
+    references: {
+      url: `http://${process.env.REFERENCES_HOST || '127.0.0.1'}:3056`,
+    },
     webpack: {
       url: `http://${process.env.WEBPACK_HOST || '127.0.0.1'}:3808`,
     },
@@ -365,7 +368,9 @@ module.exports = {
     process.env.PROJECT_UPLOAD_TIMEOUT || '120000',
     10
   ),
-  maxUploadSize: 50 * 1024 * 1024, // 50 MB
+  maxUploadSize: process.env.MAX_UPLOAD_SIZE
+    ? parseInt(process.env.MAX_UPLOAD_SIZE, 10) * 1024 * 1024
+    : 50 * 1024 * 1024, // 50 MB
   multerOptions: {
     preservePath: process.env.MULTER_PRESERVE_PATH,
   },
@@ -994,7 +999,12 @@ module.exports = {
     pdfPreviewPromotions: [],
     diagnosticActions: [],
     sourceEditorCompletionSources: [],
-    sourceEditorSymbolPalette: [],
+    sourceEditorSymbolPalette: [
+      Path.resolve(
+        __dirname,
+        '../modules/symbol-palette/frontend/components/symbol-palette'
+      ),
+    ],
     sourceEditorToolbarComponents: [],
     mainEditorLayoutModals: [],
     langFeedbackLinkingWidgets: [],
@@ -1004,7 +1014,7 @@ module.exports = {
     importProjectFromGithubModalWrapper: [],
     importProjectFromGithubMenu: [],
     editorLeftMenuSync: [],
-    editorLeftMenuManageTemplate: [],
+    editorLeftMenuManageTemplate: ['@/features/editor-left-menu/components/actions-manage-template'],
     oauth2Server: [],
     managedGroupSubscriptionEnrollmentNotification: [],
     managedGroupEnrollmentInvite: [],
@@ -1047,6 +1057,13 @@ module.exports = {
     'launchpad',
     'server-ce-scripts',
     'user-activate',
+    'sandboxed-compiles',
+    'symbol-palette',
+    'track-changes',
+    'authentication/ldap',
+    'authentication/saml',
+    'authentication/oidc',
+    'template-gallery',
   ],
   viewIncludes: {},
 
@@ -1073,6 +1090,20 @@ module.exports = {
   managedUsers: {
     enabled: false,
   },
+
+  oauthProviders: {
+    ...(process.env.EXTERNAL_AUTH && process.env.EXTERNAL_AUTH.includes('oidc') && {
+      [process.env.OVERLEAF_OIDC_PROVIDER_ID || 'oidc']: {
+        name: process.env.OVERLEAF_OIDC_PROVIDER_NAME || 'OIDC Provider',
+        descriptionKey: process.env.OVERLEAF_OIDC_PROVIDER_DESCRIPTION,
+        descriptionOptions: { link: process.env.OVERLEAF_OIDC_PROVIDER_INFO_LINK },
+        hideWhenNotLinked: process.env.OVERLEAF_OIDC_PROVIDER_HIDE_NOT_LINKED ?
+          process.env.OVERLEAF_OIDC_PROVIDER_HIDE_NOT_LINKED.toLowerCase() === 'true' : undefined,
+        linkPath: '/oidc/login',
+      },
+    }),
+  },
+
 }
 
 module.exports.mergeWith = function (overrides) {

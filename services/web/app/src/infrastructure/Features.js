@@ -12,8 +12,8 @@ const trackChangesModuleAvailable =
 /**
  * @typedef {Object} Settings
  * @property {Object | undefined}  apis
- * @property {Object | undefined}  apis.linkedUrlProxy
- * @property {string | undefined}  apis.linkedUrlProxy.url
+ * @property {Object | undefined}  apis.references
+ * @property {string | undefined}  apis.references.url
  * @property {boolean | undefined} enableGithubSync
  * @property {boolean | undefined} enableGitBridge
  * @property {boolean | undefined} enableHomepage
@@ -52,7 +52,7 @@ const Features = {
       case 'registration-page':
         return (
           !Features.externalAuthenticationSystemUsed() ||
-          Boolean(Settings.overleaf)
+          Boolean(Settings.overleaf) || Settings.oidc?.allowedOIDCEmailDomains
         )
       case 'registration':
         return Boolean(Settings.overleaf)
@@ -67,7 +67,7 @@ const Features = {
       case 'oauth':
         return Boolean(Settings.oauth)
       case 'templates-server-pro':
-        return Boolean(Settings.templates?.user_id)
+        return Boolean(Settings.templates)
       case 'affiliations':
       case 'analytics':
         return Boolean(_.get(Settings, ['apis', 'v1', 'url']))
@@ -83,8 +83,7 @@ const Features = {
         )
       case 'link-url':
         return Boolean(
-          _.get(Settings, ['apis', 'linkedUrlProxy', 'url']) &&
-            Settings.enabledLinkedFileTypes.includes('url')
+          Settings.enabledLinkedFileTypes.includes('url')
         )
       case 'support':
         return supportModuleAvailable
