@@ -2,7 +2,7 @@ import _ from 'lodash'
 import Path from 'node:path'
 let ProjectEditorHandler
 
-module.exports = ProjectEditorHandler = {
+export default ProjectEditorHandler = {
   trackChangesAvailable: true,
 
   buildProjectModelView(

@@ -1,7 +1,7 @@
 import logger from '@overleaf/logger'
 import ErrorController from '../../../../app/src/Features/Errors/ErrorController.mjs'
 import Errors from '../../../../app/src/Features/Errors/Errors.js'
-import SessionManager from '../../../../app/src/Features/Authentication/SessionManager.js'
+import SessionManager from '../../../../app/src/Features/Authentication/SessionManager.mjs'
 import TemplateGalleryManager from'./TemplateGalleryManager.mjs'
 import { getUserName } from './TemplateGalleryHelper.mjs'
 import { TemplateNameConflictError, RecompileRequiredError } from './TemplateErrors.mjs'
